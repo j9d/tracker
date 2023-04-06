@@ -1,0 +1,60 @@
+version: "3.8"
+services:
+  redis:
+    restart: always
+    image: redis:7.0-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - db-net
+
+  db:
+    restart: always
+    image: postgres:15.2
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DBNAME=db
+    ports:
+      - "5432:5432"
+    networks:
+      - db-net
+
+  django:
+    restart: always
+    container_name: django
+    command: bash -c "python wait_for_it.py --service-name db --ip db --port 5432 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASS=password
+      - PG_HOST=db:5432
+
+    build:
+      context: ./lbs/
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - db-net
+
+  frontend:
+    restart: always
+    command: npm start
+    container_name: frontend
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    depends_on:
+      - django
+    networks:
+      - db-net
+
+networks:
+  db-net:
+    driver: bridge

@@ -25,3 +25,5 @@ node_modules/
 *.pyc
 *.sqlite3
 __pycache__
+
+.env
