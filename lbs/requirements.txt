@@ -1,7 +1,8 @@
 django==4.2
 django-admin
 django-environ
-djangorestframework
 django-cors-headers
+django-webpack-loader
+djangorestframework
 
 psycopg

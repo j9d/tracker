@@ -13,5 +13,4 @@ reup:
 	make up
 
 shell:
-	docker exec --tty --interactive django
-
+	docker exec --tty --interactive django /bin/bash
