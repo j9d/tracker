@@ -1,13 +1,5 @@
 version: "3.8"
 services:
-  redis:
-    restart: always
-    image: redis:7.0-alpine
-    ports:
-      - "6379:6379"
-    networks:
-      - db-net
-
   db:
     restart: always
     image: postgres:15.2
@@ -32,11 +24,13 @@ services:
     build:
       context: ./lbs/
       dockerfile: Dockerfile
+    volumes:
+      - ./lbs:/app/api/lbs
+      - ./frontend:/app/api/frontend
     ports:
       - "8000:8000"
     depends_on:
       - db
-      - redis
     networks:
       - db-net
 
