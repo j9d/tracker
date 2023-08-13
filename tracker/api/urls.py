@@ -1,7 +1,13 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import SimpleRouter
 
-from . import views
+from tracker.api import views
 
+router = SimpleRouter()
+router.register("activities", views.ActivityViewSet)
+
+app_name = "api"
 urlpatterns = [
-    path('hello/', views.hello, name="hello"),
+    path("", include(router.urls)),
+    path("hello/", views.hello, name="hello"),
 ]
