@@ -2,6 +2,9 @@
 
 .vscode
 
+# static files
+staticfiles/
+
 # dependencies
 node_modules/
 .pnp/

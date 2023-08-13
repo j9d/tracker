@@ -1,0 +1,27 @@
+FROM node:20-bookworm-slim
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    sudo \
+    vim \
+    nodejs \
+    npm \
+    build-essential \
+    libpq-dev
+RUN npm install -g n
+RUN n stable
+
+RUN mkdir /opt/tracker && mkdir /opt/tracker/frontend
+WORKDIR /opt/tracker/frontend
+
+COPY frontend /opt/tracker/frontend
+COPY frontend/package.json frontend/package-lock.json /opt/tracker/frontend/
+RUN npm ci 
+RUN npm run build
+
+COPY . ..
+
+EXPOSE 3000
+
+CMD [ "npm", "run", "serve" ]

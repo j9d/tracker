@@ -1,0 +1,23 @@
+FROM python:3.11-slim-bookworm
+ENV PYTHONUNBUFFERED 1
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    sudo \
+    vim \
+    build-essential \
+    libpq-dev
+
+RUN mkdir /opt/tracker
+WORKDIR /opt/tracker
+
+RUN pip install --upgrade pip setuptools wheel
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+
+CMD [ "sh", "docker/start.sh" ]

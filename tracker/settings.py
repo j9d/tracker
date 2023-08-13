@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 env.read_env(os.path.join(BASE_DIR, '.env'))
 
-SECRET_KEY = env("SECRET_KEY", default="%ef;BS=f3G5dN9(]ra2=b?wR@N4$PQx*G;-+*Mt2yj;X6%pBDi")
+SECRET_KEY = env("SECRET_KEY", default="verysecretkey")
 
 DEBUG = True
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,7 +83,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': env('POSTGRES_USER'),
         'PASSWORD': env('POSTGRES_PASS'),
-        'HOST': 'db',
+        'HOST': 'postgres',
         'PORT': '5432',
     }
 }
@@ -127,6 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = '/opt/tracker/staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

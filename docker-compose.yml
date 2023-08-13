@@ -1,54 +1,56 @@
 version: "3.8"
 services:
-  db:
+  postgres:
     restart: always
+    container_name: postgres
     image: postgres:15.2
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
       - POSTGRES_DBNAME=db
-    ports:
-      - "5432:5432"
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    volumes:
+      - pg_data:/var/lib/postgresql
     networks:
-      - db-net
+      - tracker
 
   django:
     restart: always
     container_name: django
-    command: bash -c "python wait_for_it.py --service-name db --ip db --port 5432 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    environment:
+    command: sh docker/start.sh
+    environment: &django_environment
+      - DATABASE_URL=postgresql://localhost:5432
       - POSTGRES_USER=admin
       - POSTGRES_PASS=password
-      - PG_HOST=db:5432
-
     build:
-      context: ./lbs/
-      dockerfile: Dockerfile
-    volumes:
-      - ./lbs:/app/api/lbs
-      - ./frontend:/app/api/frontend
+      context: .
+      dockerfile: ./docker/Dockerfile.back
+    volumes: &django_volumes
+      - .:/opt/tracker
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      - postgres
     networks:
-      - db-net
+      - tracker
 
   frontend:
     restart: always
-    command: npm start
+    command: npm run start
     container_name: frontend
+    environment: *django_environment
     build:
-      context: ./frontend/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./docker/Dockerfile.front
+    volumes: *django_volumes
+    stdin_open: true
     ports:
       - "3000:3000"
-    stdin_open: true
-    depends_on:
-      - django
     networks:
-      - db-net
+      - tracker
 
 networks:
-  db-net:
-    driver: bridge
+  tracker:
+
+volumes:
+  pg_data:
