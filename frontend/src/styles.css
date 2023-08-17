@@ -1,9 +1,24 @@
-h1 {
+h1, h2 {
     margin: 0;
+}
+
+ul {
+    padding: 0;
 }
 
 .container {
     align-self: center;
     max-width: 60%;
     margin: 4em auto;
+}
+
+.activity-item {
+    border: 2px solid grey;
+    border-radius: 5px;
+    padding: 1em;
+    margin: 2em 0;
+}
+
+.activity-li {
+    list-style: none;
 }

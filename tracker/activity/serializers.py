@@ -22,6 +22,7 @@ class ActivitySerializer(ModelSerializer):
     class Meta:
         model = Activity
         fields = [
+            "pk",
             "title",
             "description",
             "target",

@@ -9,6 +9,7 @@ def hello(request):
     message = "hello!"
     return JsonResponse({"message": message})
 
+
 class ActivityViewSet(ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
