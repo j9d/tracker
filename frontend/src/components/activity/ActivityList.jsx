@@ -22,7 +22,12 @@ export default function ActivityList() {
             );
         })
     }, []);
+    if (activities) {
+        return (
+            <ul>{activities}</ul>
+        );
+    }
     return (
-        <ul>{activities}</ul>
-    );
+        <p>No activities found.</p>
+    )
 }
